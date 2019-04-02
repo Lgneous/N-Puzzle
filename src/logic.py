@@ -85,22 +85,24 @@ class Puzzle:
         return str(self)
 
     def __eq__(self, other):
+        """Compare the 2 grids"""
         return np.array_equal(self.grid, other.grid)
 
     def __ne__(self, other):
         return not (self == other)
 
     def __le__(self, other):
-        return self.f_score + hash(self) <= other.f_score + hash(other)
+        return hash(self) <= hash(other)
 
     def __lt__(self, other):
-        return self.f_score + hash(self) < other.f_score + hash(other)
+        return hash(self) < hash(other)
 
     def __gt__(self, other):
-        return self.f_score + hash(self) > other.f_score + hash(other)
+        return hash(self) > hash(other)
 
     def __ge__(self, other):
-        return self.f_score + hash(self) >= other.f_score + hash(other)
+        return hash(self) >= hash(other)
 
     def __hash__(self):
-        return hash(self.grid.tostring())
+        """Complex hash for set usage, f-score added for ordering in tree with comparison functions"""
+        return hash(self.grid.tostring()) + self.f_score
