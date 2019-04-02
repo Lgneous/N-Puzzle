@@ -1,5 +1,3 @@
-from functools import reduce
-
 import tree_set
 
 
