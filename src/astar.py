@@ -1,8 +1,10 @@
 from functools import reduce
 
+import tree_set
 
-def best_f(open_set):
-    """Returns the puzzle in the set which has the lowest f_score"""
+
+def best_f_score(open_set):
+    """Return the puzzle in the set which has the lowest f_score"""
     return min(open_set, key=lambda x: x.f_score)
 
 
@@ -15,26 +17,28 @@ def a_star(heuristic, start):
     open_set = {start}
     closed_set = set()
 
+    open_set = tree_set.TreeSet()
+    closed_set = tree_set.TreeSet()
+    open_set.add(start)
+
     while open_set:
-        e = best_f(open_set)
-        print(e)
+        e = best_f_score(open_set)
         if e.done():
             return e
         open_set.remove(e)
+        for s in e.expand():
+            s.g_score = e.g_score + 1
+            s.apply_heuristic(heuristic)
+            if s in open_set or s in closed_set:
+                x = open_set.find_lt(s)
+                y = closed_set.find_lt(s)
+                if x and y:
+                    raise Exception("????????????????")
+                if x or y:
+                    continue
+            open_set.add(s)
         closed_set.add(e)
-        for s in e.expand(closed_set):
-            if s in closed_set:
-                continue
-            g_score = s.g_score + 1
-            if s in open_set:
-                if g_score < s.g_score:
-                    s.g_score = g_score
-                    s.parent = e
-            else:
-                s.g_score = g_score
-                s.apply_heuristic(heuristic)
-                s.parent = e
-                open_set.add(s)
+    return None
 
 
 import logic
@@ -43,13 +47,25 @@ import heuristics
 import numpy as np
 
 
-grid = np.array([[1, 4, 7], [6, 0, 3], [5, 2, 8]])
+grid = np.array([[2, 8, 3], [4, 0, 5], [1, 7, 6]])
+
+
+def display_path(e):
+    if e.parent is None:
+        return 0
+    x = 1 + display_path(e.parent)
+    print(e.parent)
+    return x
+
+
 s = logic.Puzzle(grid)
-final_state = a_star(heuristics.manhattan, s)
-t = final_state.parent
-nmoves = 0
-while t:
-    nmoves += 1
-    print(t.grid)
-    t = t.parent
-print("Length: " + str(nmoves))
+e = a_star(heuristics.manhattan, s)
+print("Manhattan distance -")
+print("Total # of steps: {}".format(display_path(e)))
+
+print("\n{}\n".format("_" * 80))
+
+s = logic.Puzzle(grid)
+e = a_star(heuristics.hamming, s)
+print("Hamming distance -")
+print("Total # of steps: {}".format(display_path(e)))
