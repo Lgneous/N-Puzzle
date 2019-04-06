@@ -1,41 +1,30 @@
-import tree_set
-
-
-def best_f_score(open_set):
-    """Return the puzzle in the set which has the lowest f_score"""
-    return min(open_set, key=lambda x: x.f_score)
+import heapq
 
 
 def run(start, heuristic):
-    """A* algorithm
-
-    Takes an heuristic function and an initial state as an input.
-    Return the solution to the puzzle, or None if there is no solution
-    """
     start.apply_heuristic(heuristic)
+    open_set = {start}
+    closed_set = set()
 
-    open_set = tree_set.TreeSet()
-    closed_set = tree_set.TreeSet()
-    open_set.add(start)
+    heap = []
+    heapq.heappush(heap, (start.f_score, start))
 
-    time_comp = 1
-    space_comp = 1
+    time_comp = 0
+    space_comp = 0
 
     while open_set:
-        e = best_f_score(open_set)
+        _, e = heapq.heappop(heap)
+        closed_set.add(e)
         if e.done():
             return e, time_comp, space_comp
-        time_comp += 1
         open_set.remove(e)
         for s in e.expand():
-            s.g_score = e.g_score + 1
-            s.apply_heuristic(heuristic)
-            if s in open_set or s in closed_set:
-                x = open_set.find_lt(s)
-                y = closed_set.find_lt(s)
-                if x or y:
-                    continue
-            open_set.add(s)
-            space_comp = max(len(open_set), space_comp)
-        closed_set.add(e)
+            if s not in closed_set:
+                s.apply_heuristic(heuristic)
+                s.g_score = e.g_score + 1
+                if s not in open_set:
+                    open_set.add(s)
+                    space_comp = max(len(open_set), len(closed_set), space_comp)
+                    heapq.heappush(heap, (s.f_score, s))
+                    time_comp += 1
     return None, time_comp, space_comp
