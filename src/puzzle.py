@@ -20,6 +20,7 @@ class Puzzle:
 
     @staticmethod
     def make_goal(s):
+        """Taken from generator"""
         ts = s * s
         puzzle = [-1 for i in range(ts)]
         cur = 1
@@ -49,6 +50,7 @@ class Puzzle:
         return puzzle
 
     def done(self):
+        """Return True if grid is equal to goal"""
         return np.array_equal(self.grid, self._goal)
 
     @property
@@ -56,11 +58,18 @@ class Puzzle:
         return self.g_score + self.h_score
 
     def apply_heuristic(self, f):
-        """Apply the heuristic function and set its value to _h_score"""
+        """Apply the heuristic function and set its value to h_score, return
+        the computed f_score
+
+        """
         self.h_score = f(self.grid, self._goal)
+        return self.f_score
 
     def expand(self):
-        """Yield all possible moves represented as copies of self with grid changed"""
+        """Yield all possible moves represented as copies of self with grid
+        changed
+
+        """
         if self.y - 1 >= 0:
             grid = self.grid.copy()
             grid[self.y, self.x] = grid[self.y - 1, self.x]
