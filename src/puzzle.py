@@ -85,36 +85,14 @@ class Puzzle:
     def __str__(self):
         return "-- {} --\n{}".format(self.move, "\n".join(str(s) for s in self.grid))
 
-    def __repr__(self):
-        return str(self)
-
     def __eq__(self, other):
         return np.array_equal(self.grid, other.grid)
 
-    def __ne__(self, other):
-        return not self == other
-
-    def __le__(self, other):
-        return hash(self) <= hash(other)
-
     def __lt__(self, other):
-        return hash(self) < hash(other)
-
-    def __gt__(self, other):
-        return hash(self) > hash(other)
-
-    def __ge__(self, other):
-        return hash(self) >= hash(other)
-
-    def __contains__(self, other):
-        if self == other:
-            return True
-        if self.parent is None:
-            return False
-        return other in self.parent
+        return self.f_score < other.f_score
 
     def __hash__(self):
         """Complex hash for set usage, f-score added for ordering in tree with
         comparison function
         """
-        return hash(self.grid.tostring()) + self.f_score
+        return hash(self.grid.tostring())
