@@ -2,10 +2,10 @@ import argparse
 
 import a_star
 import heuristics
-import ida_star
 import reader
 
-heuristics_table = {"manhattan": heuristics.manhattan, "hamming": heuristics.hamming}
+HEURISTICS_TABLE = {"manhattan": heuristics.manhattan, "hamming": heuristics.hamming}
+ALGORITHM_TABLE = {"a_star": a_star.run}
 
 
 def display_path(node):
@@ -22,12 +22,14 @@ if __name__ == "__main__":
     )
     parser.add_argument("file", metavar="FILE")
     parser.add_argument("-H", "--heuristic", metavar="NAME", default="manhattan")
+    parser.add_argument("-a", "--algorithm", default="a_star")
     args = parser.parse_args()
     filename = args.file
-    heuristic = heuristics_table[args.heuristic]
+    heuristic = HEURISTICS_TABLE[args.heuristic]
+    algo = ALGORITHM_TABLE[args.algorithm]
     with open(filename) as f:
         start = reader.parse(f)
-    goal, time_comp, space_comp = a_star.run(start, heuristic)
+    goal, time_comp, space_comp = algo(start, heuristic)
     if goal is None:
         print("Invalid puzzle")
     else:
