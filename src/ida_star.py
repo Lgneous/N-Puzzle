@@ -20,14 +20,6 @@ def run(start, heuristic, greedy=False):
     time_comp = 1
     space_comp = 1
 
-    while True:
-        score, node = search(start, 0, bound)
-        if np.isinf(score):
-            return None, 0, 0
-        if score == -1:
-            return node, time_comp, space_comp
-        bound = score
-
     def search(e, g_score, bound):
         nonlocal time_comp, space_comp
         time_comp += 1
@@ -48,3 +40,11 @@ def run(start, heuristic, greedy=False):
                     cost = s_score
                 path.remove(s)
         return cost, e
+
+    while True:
+        score, node = search(start, 0, bound)
+        if np.isinf(score):
+            return None, 0, 0
+        if score == -1:
+            return node, time_comp, space_comp
+        bound = score
