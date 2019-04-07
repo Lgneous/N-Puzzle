@@ -1,7 +1,7 @@
 import heapq
 
 
-def run(start, heuristic):
+def run(start, heuristic, greedy=False):
     """Run the a* algorithm
 
     :param start: Initial puzzle
@@ -20,6 +20,8 @@ def run(start, heuristic):
     time_comp = 0
     space_comp = 0
 
+    g_inc = int(not greedy)
+
     while open_set:
         _, e = heapq.heappop(heap)
         closed_set.add(e)
@@ -29,7 +31,7 @@ def run(start, heuristic):
         for s in e.expand():
             if s not in closed_set:
                 s.apply_heuristic(heuristic)
-                s.g_score = e.g_score + 1
+                s.g_score = e.g_score + g_inc
                 if s not in open_set:
                     open_set.add(s)
                     space_comp = max(len(open_set), len(closed_set), space_comp)
