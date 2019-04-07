@@ -6,8 +6,10 @@ import ida_star
 import reader
 import ucs
 
-HEURISTICS_TABLE = {"manhattan": heuristics.manhattan, "hamming": heuristics.hamming}
-ALGORITHM_TABLE = {"a_star": a_star.run, "ida_star": ida_star.run, "uniform": ucs.run}
+HEURISTICS_TABLE = {"manhattan": heuristics.manhattan,
+                    "hamming": heuristics.hamming}
+ALGORITHM_TABLE = {"a_star": a_star.run,
+                   "ida_star": ida_star.run, "uniform": ucs.run}
 
 
 def display_path(node):
