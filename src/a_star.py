@@ -2,6 +2,14 @@ import heapq
 
 
 def run(start, heuristic):
+    """Run the a* algorithm
+
+    :param start: Initial puzzle
+    :param heuristic: Heuristic function that will be used to compute f scores
+    :returns: Final puzzle, time complexity and space complexity
+    :rtype: Puzzle, int, int
+
+    """
     start.apply_heuristic(heuristic)
     open_set = {start}
     closed_set = set()

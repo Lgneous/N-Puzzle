@@ -2,13 +2,30 @@ import numpy as np
 
 
 def hamming(grid, goal):
-    """Hamming distance, return the number of element in grid different than goal"""
+    """Hamming distance, number of element in grid different than goal
+
+    :param grid: Puzzle to be tested
+    :param goal: Goal puzzle
+    :returns: Hamming distance between goal and grid
+    :rtype: int
+
+    """
     _grid = grid != goal
     _grid[goal == 0] = False
     return np.count_nonzero(_grid)
 
 
 def manhattan(grid, goal, cache=[]):
+    """Manhattan distance, cached
+
+    :param grid: Puzzle to be tested
+    :param goal: Goal puzzle
+    :param cache: Weight matrix, computed once
+    :returns: L1 distance between goal and grid
+    :rtype: int
+
+    """
+
     def populate(goal, cache):
         cache.append(np.zeros_like(goal))
         k = goal.shape[0]

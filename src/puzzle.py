@@ -3,6 +3,14 @@ import numpy as np
 
 class Puzzle:
     def __init__(self, grid, parent=None, move="ORIGIN", goal=None):
+        """Representation of a n-puzzle
+
+        :param grid: np.ndarray representing the puzzle
+        :param parent: puzzle or None
+        :param move: string representing the move made to get to that step
+        :param goal: cache of goal, computed if not provided
+
+        """
         self.grid = np.array(grid)
         # required for hashing, also, mutability is never used
         self.grid.flags.writeable = False
@@ -20,7 +28,14 @@ class Puzzle:
 
     @staticmethod
     def make_goal(s):
-        """Taken from generator"""
+        """Create a goal puzzle based on a shape
+
+        :param s: size of one side of the puzzle
+        :returns: array representing the puzzle
+        :rtype: np.ndarray
+
+        """
+
         ts = s * s
         puzzle = [-1 for i in range(ts)]
         cur = 1
@@ -50,7 +65,12 @@ class Puzzle:
         return puzzle
 
     def done(self):
-        """Return True if grid is equal to goal"""
+        """Checks if the puzzle is done
+
+        :returns: True or False
+        :rtype: bool
+
+        """
         return np.array_equal(self.grid, self._goal)
 
     @property
@@ -58,18 +78,24 @@ class Puzzle:
         return self.g_score + self.h_score
 
     def apply_heuristic(self, f):
-        """Apply the heuristic function and set its value to h_score, return
-        the computed f_score
+        """Applies the heuristic function and cache its result in h_score
+
+        :param f: heuristic function
+        :returns: h_score + g_score
+        :rtype: int
 
         """
         self.h_score = f(self.grid, self._goal)
         return self.f_score
 
     def expand(self):
-        """Yield all possible moves represented as copies of self with grid
-        changed
+        """Yields the possible moves from initial state
+
+        :returns: Puzzles with one piece moved in the grid
+        :rtype: Iterator[Puzzle]
 
         """
+
         if self.y - 1 >= 0:
             grid = self.grid.copy()
             grid[self.y, self.x] = grid[self.y - 1, self.x]
@@ -101,7 +127,4 @@ class Puzzle:
         return self.f_score < other.f_score
 
     def __hash__(self):
-        """Complex hash for set usage, f-score added for ordering in tree with
-        comparison function
-        """
         return hash(self.grid.tostring())

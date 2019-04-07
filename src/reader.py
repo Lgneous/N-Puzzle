@@ -4,6 +4,13 @@ import puzzle
 
 
 def parse(f):
+    """Reads a file and return the corresponding grid
+
+    :param f: File object to read from
+    :returns: Corresponding grid read from f
+    :rtype: Puzzle
+
+    """
     n = -1
     k = -1
     grid = []
