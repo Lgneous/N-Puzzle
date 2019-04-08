@@ -32,6 +32,7 @@ def run(start, heuristic, greedy=False):
         for s in e.expand():
             if s not in path:
                 path.add(s)
+                space_comp = max(space_comp, len(path))
                 s.apply_heuristic(heuristic)
                 s_score, t = search(s, g_score + g_inc, bound)
                 if s_score == -1:
