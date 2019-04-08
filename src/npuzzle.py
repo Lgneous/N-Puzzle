@@ -7,9 +7,11 @@ import reader
 import ucs
 
 HEURISTICS_TABLE = {"manhattan": heuristics.manhattan,
-                    "hamming": heuristics.hamming}
+                    "hamming": heuristics.hamming,
+                    "nilsson": heuristics.nilsson}
+
 ALGORITHM_TABLE = {"a_star": a_star.run,
-                   "ida_star": ida_star.run, "uniform": ucs.run}
+                   "ida": ida_star.run, "uniform": ucs.run}
 
 
 def display_path(node):
@@ -19,7 +21,7 @@ def display_path(node):
         accumulator.append(str(node))
         node = node.parent
         length += 1
-    print("\n\n".join(accumulator))
+    print("\n\n".join(accumulator[::-1]))
     return length
 
 
@@ -31,11 +33,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "-H",
         "--heuristic",
-        metavar="NAME",
         default="manhattan",
         choices=HEURISTICS_TABLE.keys(),
     )
-    parser.add_argument("-a", "--algorithm", default="a_star")
+    parser.add_argument("-a", "--algorithm", default="a_star",
+                        choices=ALGORITHM_TABLE.keys())
     parser.add_argument("-g", "--greedy", action="store_true")
     args = parser.parse_args()
     filename = args.file
