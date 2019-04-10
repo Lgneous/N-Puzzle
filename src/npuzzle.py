@@ -10,8 +10,9 @@ HEURISTICS_TABLE = {"manhattan": heuristics.manhattan,
                     "hamming": heuristics.hamming,
                     "nilsson": heuristics.nilsson}
 
-ALGORITHM_TABLE = {"a_star": a_star.run,
-                   "ida": ida_star.run, "uniform": ucs.run}
+
+ALGORITHM_TABLE = {"a_star": a_star.run, "ida": ida_star.run,
+                   "uniform": ucs.run}
 
 
 def display_path(node):
