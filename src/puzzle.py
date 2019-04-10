@@ -19,6 +19,8 @@ class Puzzle:
         if goal is None:
             self._goal = np.array(Puzzle.make_goal(self.k))
             self._goal = self._goal.reshape((self.k, self.k))
+            if not self.is_solvable():
+                raise ValueError("Invalid puzzle")
         else:
             self._goal = goal
         self.h_score = 0
@@ -63,6 +65,46 @@ class Puzzle:
             if cur == s * s:
                 cur = 0
         return puzzle
+
+    def is_solvable(self):
+        """Check if a puzzle is solvable
+
+        Check that the polarity of inversion is preserved for input and goal
+        (Source: https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html)
+
+        :returns: True if puzzle is solvable, False otherwise
+        :rtype: bool
+
+        """
+
+        def flatten(grid, goal):
+            acc = []
+            for i in range(1, self.k * self.k):
+                (y,), (x,) = np.where(goal == i)
+                acc.append(grid[y, x])
+            (y,), (x,) = np.where(goal == 0)
+            e = grid[y, x]
+            if e:
+                acc.append(e)
+            return acc
+
+        def inversions(grid, goal):
+            xs = flatten(grid, goal)
+            invs = 0
+            for i, x in enumerate(xs):
+                for _, x_ in enumerate(xs[i + 1:]):
+                    if x and x_ and x > x_:
+                        invs += 1
+            return invs
+        N = inversions(self.grid, self._goal)
+        M = inversions(self._goal, self._goal)
+        if not self.k % 2:
+            # get number of row of empty cell starting from bottom
+            (e,), _ = np.where(self.grid == 0)
+            N += e
+            (e,), _ = np.where(self.grid == 0)
+            M += e
+        return N % 2 == M % 2
 
     def done(self):
         """Checks if the puzzle is done
