@@ -1,0 +1,16 @@
+#+TITLE: N-Puzzle solver written in python
+
+*** Dependencies
+- python3.5+
+- pip
+
+*** How to use it
+#+BEGIN_SRC bash
+pip install -r requirements.txt
+
+# To see the available options
+python3 src/npuzzle.py -h
+
+# To run the program
+python3 src/npuzzle.py tests/3s_a
+#+END_SRC
