@@ -4,7 +4,7 @@ import puzzle
 
 
 def parse(f):
-    """Reads a file and return the corresponding grid
+    """Read a file and return the corresponding grid
 
     :param f: File object to read from
     :returns: Corresponding grid read from f
@@ -22,9 +22,9 @@ def parse(f):
             raise SyntaxError("Too many rows: {}".format(line))
         if n == -1:
             n = int(line)
-            k = n
             if n < 1:
                 raise ValueError("Size of puzzle must be positive")
+            k = n
             continue
         row = line_.split()
         if len(row) != k:
