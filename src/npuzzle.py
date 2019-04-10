@@ -45,12 +45,19 @@ if __name__ == "__main__":
     heuristic = HEURISTICS_TABLE[args.heuristic]
     algo = ALGORITHM_TABLE[args.algorithm]
     is_greedy = args.greedy
-    with open(filename) as f:
-        start = reader.parse(f)
-    goal, time_comp, space_comp = algo(start, heuristic, greedy=is_greedy)
-    if goal is None:
-        print("Invalid puzzle")
-    else:
-        print("Length of path: {}".format(display_path(goal)))
-    print("Time complexity: {}".format(time_comp))
-    print("Space complexity: {}".format(space_comp))
+    try:
+        with open(filename) as f:
+            start = reader.parse(f)
+        goal, time_comp, space_comp = algo(start, heuristic, greedy=is_greedy)
+        if goal is None:
+            print("Invalid puzzle")
+        else:
+            print("Length of path: {}".format(display_path(goal)))
+        print("Time complexity: {}".format(time_comp))
+        print("Space complexity: {}".format(space_comp))
+    except (RecursionError, MemoryError):
+        print(
+            "Memory usage too high: consider using IDA* algorithm (python3 npuzzle.py -a ida FILE), may take more time than usual"
+        )
+    except Exception as e:
+        print(e)
